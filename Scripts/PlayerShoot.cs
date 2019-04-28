@@ -7,15 +7,15 @@ public class PlayerShoot : NetworkBehaviour
     public PlayerWeapon weapon;
 
     [SerializeField]
-    private Camera camera;
+    private Camera cam;
     [SerializeField]
     private LayerMask mask;
 
     void Start()
     {
-        if (camera == null)
+        if (cam == null)
         {
-            Debug.LogError("PlayerShoot: No camera referenced");
+            Debug.LogError("PlayerShoot: No cam referenced");
             this.enabled = false;
         }
     }
@@ -32,7 +32,7 @@ public class PlayerShoot : NetworkBehaviour
     void Shoot()
     {
         RaycastHit hit;
-        if(Physics.Raycast(camera.transform.position, camera.transform.forward, out hit, weapon.range, mask))
+        if(Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, weapon.range, mask))
         {
             if (hit.collider.tag == PLAYER_TAG)
             {
@@ -47,6 +47,6 @@ public class PlayerShoot : NetworkBehaviour
         Debug.Log(playerID + " has been shot.");
 
         Player player = GameManager.GetPlayer(playerID);
-        player.TakeDamage(damage);
+        player.RpcTakeDamage(damage);
     }
 }
