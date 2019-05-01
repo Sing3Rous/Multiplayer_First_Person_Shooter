@@ -4,7 +4,11 @@ using System.Collections.Generic;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
+
     public MatchSettings matchSettings;
+
+    [SerializeField]
+    private GameObject sceneCamera;
 
     void Awake()
     {
@@ -16,6 +20,16 @@ public class GameManager : MonoBehaviour
         {
             instance = this;
         }
+    }
+
+    public void SetSceneCameraActive(bool isActive)
+    {
+        if (sceneCamera == null)
+        {
+            return;
+        }
+
+        sceneCamera.SetActive(isActive);
     }
 
     #region Player tracking
