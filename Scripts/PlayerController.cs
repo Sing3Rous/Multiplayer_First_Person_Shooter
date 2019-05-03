@@ -48,6 +48,11 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        if (PauseGame.IsOn)
+        {
+            return;
+        }
+        
         //Setting target position for spring
         //this makes the physics right when it comes to
         //applying gravity when flying over objects
