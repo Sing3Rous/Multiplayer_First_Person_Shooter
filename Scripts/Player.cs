@@ -20,6 +20,12 @@ public class Player : NetworkBehaviour
     [SyncVar]
     private int currentHealth;
 
+    [SyncVar]
+    public string username = "Loading...";
+
+    public int kills;
+    public int deaths;
+
     [SerializeField]
     private Behaviour[] disableOnDeath;
     private bool[] wasEnabled;
@@ -84,25 +90,34 @@ public class Player : NetworkBehaviour
     // }
 
     [ClientRpc]
-    public void RpcTakeDamage(int amount)
+    public void RpcTakeDamage(int amount, string sourceID)
     {
         if (isDead)
         {
             return;
         }
+
         currentHealth -= amount;
 
         Debug.Log(transform.name + " now has " + currentHealth + " health.");
 
         if (currentHealth <= 0)
         {
-            Die();
+            Die(sourceID);
         }
     }
 
-    private void Die()
+    private void Die(string sourceID)
     {
         isDead = true;
+
+        Player sourcePlayer = GameManager.GetPlayer(sourceID);
+        if (sourceID != null)
+        {
+            sourcePlayer.kills++;
+        }
+
+        deaths++;
 
         //Disable components
         foreach(Behaviour component in disableOnDeath)
