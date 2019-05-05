@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 
 public class GameManager : MonoBehaviour
 {
@@ -51,6 +52,11 @@ public class GameManager : MonoBehaviour
     public static Player GetPlayer(string playerID)
     {
         return players[playerID];
+    }
+
+    public static Player[] GetAllPlayer()
+    {
+        return players.Values.ToArray();
     }
 
     // void OnGUI()
