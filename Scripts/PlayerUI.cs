@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerUI : MonoBehaviour
 {
@@ -6,16 +7,26 @@ public class PlayerUI : MonoBehaviour
     RectTransform thrusterFuelFill;
 
     [SerializeField]
+    RectTransform healthBarFill;
+
+    [SerializeField]
+    Text ammoText;
+
+    [SerializeField]
     GameObject pauseMenu;
 
     [SerializeField]
     GameObject scoreboard;
 
+    private Player player;
     private PlayerController controller;
+    private WeaponManager weaponManager;
 
-    public void SetController(PlayerController _controller)
+    public void SetPlayer(Player _player)
     {
-        controller = _controller;
+        player = _player;
+        controller = player.GetComponent<PlayerController>();
+        weaponManager = player.GetComponent<WeaponManager>();
     }
 
     void Start()
@@ -25,7 +36,9 @@ public class PlayerUI : MonoBehaviour
 
     void Update()
     {
-        SetFuelAmount(controller.getThrusterFuelAmount());
+        SetFuelAmount(controller.GetThrusterFuelAmount());
+        SetHealthAmount(player.GetHealthPct());
+        SetAmmoAmount(weaponManager.GetCurrentWeapon().bullets);
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -51,5 +64,15 @@ public class PlayerUI : MonoBehaviour
     void SetFuelAmount(float amount)
     {
         thrusterFuelFill.localScale = new Vector3(1f, amount, 1f);
+    }
+
+    void SetHealthAmount(float amount)
+    {
+        healthBarFill.localScale = new Vector3(1f, amount, 1f);
+    }
+
+    void SetAmmoAmount(int _amount)
+    {
+        ammoText.text = _amount.ToString();
     }
 }
