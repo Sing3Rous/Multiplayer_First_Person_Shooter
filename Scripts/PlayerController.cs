@@ -18,7 +18,7 @@ public class PlayerController : MonoBehaviour
     private float thrusterFuelRegenSped = 0.3f;
     private float thrusterFuelAmount = 1f;
 
-    public float getThrusterFuelAmount()
+    public float GetThrusterFuelAmount()
     {
         return thrusterFuelAmount;
     }
