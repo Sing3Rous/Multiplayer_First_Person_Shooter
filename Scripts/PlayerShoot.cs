@@ -8,6 +8,7 @@ public class PlayerShoot : NetworkBehaviour
 
     [SerializeField]
     private Camera cam;
+
     [SerializeField]
     private LayerMask mask;
 
@@ -34,6 +35,15 @@ public class PlayerShoot : NetworkBehaviour
             CancelInvoke("Shoot");
 
             return;
+        }
+
+        if (currentWeapon.bullets < currentWeapon.maxBullets)
+        {
+            if (Input.GetButtonDown("Reload"))
+            {
+                weaponManager.Reload();
+                return;
+            }
         }
 
         if (currentWeapon.fireRate <= 0)
@@ -91,10 +101,20 @@ public class PlayerShoot : NetworkBehaviour
     [Client]
     void Shoot()
     {
-        if (!isLocalPlayer)
+        if (!isLocalPlayer || weaponManager.isReloading)
         {
             return;
         }
+
+        if (currentWeapon.bullets <= 0)
+        {
+            weaponManager.Reload();
+            return;
+        }
+
+        currentWeapon.bullets--;
+
+        Debug.Log("Remaining bullets: " + currentWeapon.bullets);
 
         //Shooting, call the OnShoot method on the server
         CmdOnShoot();
@@ -110,6 +130,11 @@ public class PlayerShoot : NetworkBehaviour
             //Hit something, call the OnHit method on the server
             CmdOnHit(hit.point, hit.normal);
         }
+
+        if (currentWeapon.bullets <= 0)
+        {
+            weaponManager.Reload();
+        }
     }
 
     [Command]
@@ -120,4 +145,5 @@ public class PlayerShoot : NetworkBehaviour
         Player player = GameManager.GetPlayer(playerID);
         player.RpcTakeDamage(damage, sourceID);
     }
+
 }
