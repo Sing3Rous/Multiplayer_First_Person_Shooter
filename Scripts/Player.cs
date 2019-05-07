@@ -20,6 +20,11 @@ public class Player : NetworkBehaviour
     [SyncVar]
     private int currentHealth;
 
+    public float GetHealthPct()
+    {
+        return (float)currentHealth / maxHealth;
+    }
+
     [SyncVar]
     public string username = "Loading...";
 
@@ -115,6 +120,7 @@ public class Player : NetworkBehaviour
         if (sourceID != null)
         {
             sourcePlayer.kills++;
+            GameManager.instance.onPlayerKilledCallback.Invoke(username, sourcePlayer.username);
         }
 
         deaths++;
